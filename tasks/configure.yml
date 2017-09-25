@@ -1,0 +1,6 @@
+---
+- template: 
+    src= hadoop.conf 
+    dest="{{ hibench_home }}/conf/hadoop.conf"
+    owner: root
+    group: root

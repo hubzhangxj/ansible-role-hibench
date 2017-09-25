@@ -1,0 +1,39 @@
+---
+# RedHat related OSs
+- name: Yum install {{ item }}
+  yum:
+    name={{ item }} state=installed
+  when: "ansible_os_family == 'RedHat'"
+  with_items:
+  - bc
+  - maven.noarch
+
+# Debian related OSs
+- name: Apt install {{ item }}
+  action: apt pkg={{ item }} state=installed update_cache=yes cache_valid_time=604800
+  when: "ansible_os_family == 'Debian'"
+  with_items:
+  - maven
+
+  
+  
+- name: Git clone Hibench from github
+  git:
+    repo: {{ hibench_mirrors }} 
+    dest: /opt
+    version: {{ hibench_version }} 
+  register: result
+  until: result|success
+  retries: 1
+  delay: 2
+
+
+- file: dest={{ hibench_home }} src=/opt/hibench-{{ hibench_version }} state=link
+
+- file: dest=/opt/hibench src={{ hibench_home }} state=link
+
+- lineinfile: 
+    path="{{ hibench_home }}/bin/build_all.sh" 
+    regexp='mvn clean package' 
+    line="mvn -Dspark=2.1 -Dscala=2.11 clean package"
+

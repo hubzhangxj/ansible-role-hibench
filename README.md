@@ -2,6 +2,7 @@ Role Name
 =========
 
 A brief description of the role goes here.
+Templates reference by qilei 00397160.
 
 Requirements
 ------------

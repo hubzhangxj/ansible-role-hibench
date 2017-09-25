@@ -1,2 +1,14 @@
 ---
 # tasks file for ansible-role-hibench/
+- stat: path=/opt/hibench
+  register: hibench_installed
+
+- include: install.yml
+  when: not hibench_installed.stat.exists
+
+- include: configure.yml
+
+- name: Execute the command ./bin/build_all.sh, build hibench
+  shell: ./bin/build_all.sh
+  args:
+    chdir: {{ hibench_home }}

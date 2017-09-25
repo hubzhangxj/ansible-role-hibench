@@ -1,2 +1,7 @@
----
 # defaults file for ansible-role-hibench/
+# Hibench base directory to install the software
+hibench_home: /opt/hibench
+# List of servers to download the hadoop code
+hibench_mirrors: [ "https://github.com/intel-hadoop/HiBench.git" ]
+# Hibench version to install
+hibench_version: HiBench-6.0
