@@ -1,13 +1,10 @@
 # defaults file for ansible-role-hibench/
-# Hibench base directory to install the software
+# defaults install hibench for benchmark test
+# all name little letter
 home_dir: /opt
-hibench_home: /opt/HiBench
-maven_home: /opt/maven
+hibench_home: /opt/hibench
 # List of servers to download the hadoop code
 hibench_mirrors: https://github.com/intel-hadoop/HiBench.git
-maven_mirrors: http://apache.forsale.plus/maven/maven-3/3.3.9/binaries/
 
 # Hibench version to install
 hibench_version: HiBench-6.0
-maven_version: apache-maven-3.3.9-bin
-

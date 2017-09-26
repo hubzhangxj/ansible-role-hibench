@@ -1,16 +1,24 @@
 ---
-# tasks file for ansible-role-hibench/
+# tasks file for ansible-role-hibenchi/
+## hibench install and configure 
 - stat: path={{ hibench_home }}
   register: hibench_installed
+  tags:
+    - m1
 
 - include: install.yml
-#  when: not hibench_installed.stat.exists
+  when: not hibench_installed.stat.exists
+  tags:
+    - m2
 
 - include: configure.yml
-
-- name: Execute the command ./bin/build_all.sh, build hibench
-  shell: ./build_all.sh
-  args: 
-    chdir={{ hibench_home }}/bin
+  when: not hibench_installed.stat.exists
   tags:
-    - build
+    - m3
+
+#- name: Execute the command ./bin/build_all.sh, build hibench
+#  shell: ./build_all.sh
+#  args: 
+#    chdir={{ hibench_home }}/bin
+#  tags:
+#    - m4

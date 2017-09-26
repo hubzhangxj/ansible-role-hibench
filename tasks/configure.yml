@@ -2,11 +2,5 @@
 - template: src=hadoop.conf dest="{{ hibench_home }}/conf/hadoop.conf" owner=root group=root
 
 - name: Replace variables of {{ hibench_home }}/bin/build_all.sh
-  lineinfile:
-    dest="{{ hibench_home }}/bin/build-all.sh"
-    regexp='mvn clean package'
-    line="mvn -Dspark=2.1 -Dscala=2.11 clean package"
-
-- template: src=settings.xml dest="{{ maven_home }}/conf/settings.xml" owner=root group=root
-  tags:
-    - tag1
+  lineinfile: dest="{{ hibench_home }}/bin/build-all.sh" regexp='mvn clean package' line="mvn -Phadoopbench -Dspark=2.1 -Dscala=2.11 clean package"
+  #configiure environment variables
