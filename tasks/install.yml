@@ -6,33 +6,40 @@
   when: "ansible_os_family == 'RedHat'"
   with_items:
   - bc
-  - maven.noarch
+  - tar
 
-# Debian related OSs
-- name: Apt install {{ item }}
-  action: apt pkg={{ item }} state=installed update_cache=yes cache_valid_time=604800
-  when: "ansible_os_family == 'Debian'"
-  with_items:
-  - maven
+- name: Download Maven package from official web
+  get_url: url={{ maven_mirrors }}/{{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz force=no mode=0755
+  register: result
+  until: result|success
+  retries: 1
+  delay: 2 
+  tags:
+    - maven 
 
-  
-  
+- name: Decompressed Maven package 
+  unarchive: src={{ maven_home }}/{{ maven_version }}.tar.gz dest={{ home_dir }} creates={{ maven_home }}/{{ maven_version }} copy=no
+  tags:
+    - unmaven
+
 - name: Git clone Hibench from github
   git:
-    repo: {{ hibench_mirrors }} 
-    dest: /opt
-    version: {{ hibench_version }} 
+    repo=https://github.com/intel-hadoop/HiBench.git 
+    dest={{ hibench_home }}
+    version={{ hibench_version }} 
   register: result
   until: result|success
   retries: 1
   delay: 2
 
 
-- file: dest={{ hibench_home }} src=/opt/hibench-{{ hibench_version }} state=link
-
-- file: dest=/opt/hibench src={{ hibench_home }} state=link
-
-- lineinfile: 
+#- file: dest={{ hibench_home }} src=/opt/hibench-{{ hibench_version }} state=link
+- file: dest={{ maven_home }} src={{ maven_home }}/apache-maven-3.3.9 state=link
+  tags:
+    - link
+#- file: dest=/opt/hibench src={{ hibench_home }} state=link
+- name: Replace variables of {{ hibench_home }}/bin/build_all.sh 
+  lineinfile: 
     path="{{ hibench_home }}/bin/build_all.sh" 
     regexp='mvn clean package' 
     line="mvn -Dspark=2.1 -Dscala=2.11 clean package"
