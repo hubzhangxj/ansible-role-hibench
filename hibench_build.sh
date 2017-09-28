@@ -87,9 +87,11 @@ benchmark_role()
         echo "${default_site} not necessary to replace of ${bench_path} "
 	#sed -i '5s/hubzhangxj.hibench/ansible-role-hibench/'  ${default_site}
     elif [ "$bench_path" == "$bench_role_galaxy" ];then
-       sed -i '5s/ansible-role-hibench/hubzhangxj.hibench/'  ${default_site}
+	echo "${bench_role_galaxy} necessary to replace of ${bench_role_git} "
+	sed -i '5s/ansible-role-hibench/hubzhangxj.hibench/'  ${default_site}
     elif [ "$bench_path" == "$bench_role_git" ];then
-       sed -i '5s/hubzhangxj.hibench/ansible-role-hibench/'  ${default_site}
+	echo "${bench_role_git} necessary to replace of ${bench_role_galaxy} "
+	sed -i '5s/hubzhangxj.hibench/ansible-role-hibench/'  ${default_site}
     fi
 }
 
