@@ -6,7 +6,7 @@
 ###################################################################################
 export LANG=C
 export LC_ALL=C
-set -x
+set -e
 default_site='tests/test.yml'
 default_inventory='tests/inventory'
 default_remote_user='root'
@@ -81,7 +81,7 @@ done
 ###################################################################################
 # Benchmark tests/test.yml judge and replace according to directory's name
 ###################################################################################
-#benchmark_role()
+benchmark_role()
 {
     if  grep -r ${bench_path} ${default_site};then
         echo "${default_site} not necessary to replace of ${bench_path} "
@@ -91,7 +91,6 @@ done
     elif [ "$bench_path" == "$bench_role_git" ];then
        sed -i '5s/hubzhangxj.hibench/ansible-role-hibench/'  ${default_site}
     fi
-    exit 0
 }
 
 ###################################################################################
@@ -105,6 +104,10 @@ benchmark_deploy()
     ./bin/build-all.sh
     popd > /dev/null
 }
+
+if ! benchmark_role; then
+	echo -e "\033[31mError! Benchmark role error!\033[0m" ; exit 1
+fi
 
 if ! benchmark_deploy; then
 	echo -e "\033[31mError! Benchmark deploy failed!\033[0m" ; exit 1
